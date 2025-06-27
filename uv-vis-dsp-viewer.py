@@ -1,4 +1,5 @@
 import chardet
+import os
 import matplotlib.pyplot as plt
 import tkinter as tk
 from matplotlib.ticker import MultipleLocator
@@ -17,6 +18,7 @@ def load_file():
         wavelength_list, data_list, peaks_list = [], [], []
         refresh_peaks_listbox()
         plt.close()
+        file_menu.entryconfig("Save plot as", state=tk.NORMAL)
         with open(input_filename, 'rb') as dsp_file:
             raw_dsp = dsp_file.read()
             file_encoding = chardet.detect(raw_dsp)['encoding']
@@ -29,7 +31,8 @@ def load_file():
 def parse_dsp_string(dsp_string):
     dsp_lines = dsp_string.split('\n')
     meta_inf_idx = dsp_lines.index('nm')
-    sample_name = dsp_lines[meta_inf_idx-1]
+    sample_filename = dsp_lines[meta_inf_idx-1]
+    sample_name = os.path.splitext(sample_filename)[0]
     start_wavelength = int(dsp_lines[meta_inf_idx+1])
     end_wavelength = int(dsp_lines[meta_inf_idx+2])
     step = int(dsp_lines[meta_inf_idx+3])
@@ -41,7 +44,7 @@ def parse_dsp_string(dsp_string):
         spectrum_type = 'visible'
         conc_signif_stringvar.set(vis_default_conc[0])
         conc_exp_stringvar.set(vis_default_conc[1])
-    meta_inf_str = f'{sample_name}: {spectrum_type},\nstart {start_wavelength}, end {end_wavelength}, step {step}'
+    meta_inf_str = f'{sample_filename}: {spectrum_type},\nstart {start_wavelength}, end {end_wavelength}, step {step}'
     meta_inf_msg.config(text=meta_inf_str)
     data_idx = dsp_lines.index('#DATA')
     data_list = dsp_lines[data_idx+1:]
@@ -65,6 +68,7 @@ def generate_y_ticks(data_list):
     return ticks_list
 
 def build_plot(wavelength_list, data_list):
+    global fig
     fig, plot_obj = plt.subplots()
     fig.set_size_inches(9.92, 5.22)
     plot_obj.plot(wavelength_list, data_list, '-', linewidth=1, color='black', label=sample_name)
@@ -82,6 +86,8 @@ def build_plot(wavelength_list, data_list):
     plt.minorticks_on()
     plt.tight_layout()
     plt.legend(loc='best')
+    man = plt.get_current_fig_manager()
+    man.set_window_title(sample_name)
     plt.show()
 
 def find_peaks():
@@ -137,6 +143,11 @@ def copy_extinction_text():
     root.clipboard_clear()
     root.clipboard_append(extinction_text_stringvar.get())
 
+def save_plot_as(out_format):
+    output_filename = filedialog.asksaveasfilename(initialfile=sample_name+out_format)
+    if output_filename:
+        fig.savefig(output_filename)
+
 def show_help():
     help_window = tk.Toplevel()
     help_window.title("Help")
@@ -149,63 +160,69 @@ def close_all_windows():
     plt.close()
     root.destroy()
 
-wavelength_list, data_list, peaks_list = [], [], []
-sample_name = ''
-
 root = tk.Tk()
 root.title("UV-vis DSP viewer")
 root.geometry("400x400")
 root.eval('tk::PlaceWindow . center')
 root.protocol("WM_DELETE_WINDOW", close_all_windows)
 
+root.option_add("*tearOff", tk.FALSE)
+file_menu = tk.Menu()
+file_menu.add_command(label="Open", command=load_file)
+save_as_menu = tk.Menu()
+save_as_menu.add_command(label="PNG", command=lambda: save_plot_as('.png') )
+save_as_menu.add_command(label="PDF", command=lambda: save_plot_as('.pdf') )
+save_as_menu.add_command(label="SVG", command=lambda: save_plot_as('.svg') )
+file_menu.add_cascade(label="Save plot as", menu=save_as_menu, state=tk.DISABLED)
+help_menu = tk.Menu()
+help_menu.add_command(label="About", command=show_help)
+main_menu = tk.Menu()
+main_menu.add_cascade(label="File", menu=file_menu)
+main_menu.add_cascade(label="Help", menu=help_menu)
+root.config(menu=main_menu)
+
 root.columnconfigure(index=0, weight=3)
 for c in range(1,4): root.columnconfigure(index=c, weight=1)
 root.columnconfigure(index=4, weight=3)
-for r in range(7): root.rowconfigure(index=r, weight=1)
-
-load_file_btn = tk.Button(root, text='Load file', command=load_file)
-load_file_btn.grid(row=0, column=0, sticky="w", padx = 10)
-
-help_btn = tk.Button(root, text='Help', command=show_help)
-help_btn.grid(row=0, column=4, sticky="e", padx = 10)
+for r in range(6): root.rowconfigure(index=r, weight=1)
 
 meta_inf_msg = tk.Message(text="Select a .dsp file\n", width = 384)
-meta_inf_msg.grid(row=1, column=0, columnspan=5, sticky="w", padx = 10)
+meta_inf_msg.grid(row=0, column=0, columnspan=5, sticky="w", padx = 10)
 
 find_peaks_btn = tk.Button(root, text='Find peaks', command=find_peaks, state=tk.DISABLED)
-find_peaks_btn.grid(row=2, column=0, sticky="w", padx = 10)
+find_peaks_btn.grid(row=1, column=0, sticky="w", padx = 10)
 
 remove_peak_btn = tk.Button(root, text='Remove peak', command=remove_peak, state=tk.DISABLED)
-remove_peak_btn.grid(row=2, column=4, sticky="e", padx = 10)
+remove_peak_btn.grid(row=1, column=4, sticky="e", padx = 10)
 
 peaks_listbox = tk.Listbox(root, height=5)
-peaks_listbox.grid(row=3, column=0, columnspan=5, sticky="ew", padx = 10)
+peaks_listbox.grid(row=2, column=0, columnspan=5, sticky="ew", padx = 10)
 
 concentration_label_1 = tk.Label(text='Molar concentration:')
-concentration_label_1.grid(row=4, column=0)
+concentration_label_1.grid(row=3, column=0)
 
 conc_signif_stringvar = tk.StringVar()
 concentration_signif_entry = ttk.Entry(width=4, textvariable=conc_signif_stringvar)
-concentration_signif_entry.grid(row=4, column=1)
+concentration_signif_entry.grid(row=3, column=1)
 
 concentration_label_2 = tk.Label(text='• 10^')
-concentration_label_2.grid(row=4, column=2)
+concentration_label_2.grid(row=3, column=2)
 
 conc_exp_stringvar = tk.StringVar()
 concentration_exp_entry = ttk.Entry(width=3, textvariable=conc_exp_stringvar)
-concentration_exp_entry.grid(row=4, column=3)
+concentration_exp_entry.grid(row=3, column=3)
 
 concentration_label_3 = tk.Label(text='mol/L')
-concentration_label_3.grid(row=4, column=4, sticky="w", padx = 10)
+concentration_label_3.grid(row=3, column=4, sticky="w", padx = 10)
 
 calculate_extinction_btn = tk.Button(root, text='Calculate extinction', command=calculate_extinction,  state=tk.DISABLED)
-calculate_extinction_btn.grid(row=5, column=0, sticky="w", padx = 10)
+calculate_extinction_btn.grid(row=4, column=0, sticky="w", padx = 10)
 
 extinction_text_stringvar = tk.StringVar()
 extinction_text_output = ttk.Entry(textvariable=extinction_text_stringvar)
-extinction_text_output.grid(row=6, column=0, columnspan=4, sticky="ew", padx = 10)
+extinction_text_output.grid(row=5, column=0, columnspan=4, sticky="ew", padx = 10)
 
 copy_btn = tk.Button(root, text='Copy', command=copy_extinction_text)
-copy_btn.grid(row=6, column=4, sticky="e", padx = 10)
+copy_btn.grid(row=5, column=4, sticky="e", padx = 10)
 
 root.mainloop()
