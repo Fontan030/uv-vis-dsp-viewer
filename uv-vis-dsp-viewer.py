@@ -41,6 +41,17 @@ def parse_dsp_string(dsp_string):
         curr_wavelength += step
     return sample_name, wavelength_list, data_list
 
+def generate_y_ticks(data_list):
+    y_reserve_coeff = 1.1
+    y_range = max(data_list) - min(data_list)
+    y_step = 0.5 if y_range < 2 else 1
+    ticks_list = [0]
+    current_tick = 0
+    while current_tick < max(data_list) * y_reserve_coeff:
+        current_tick += y_step
+        ticks_list.append(current_tick)
+    return ticks_list
+
 def build_plot(wavelength_list, data_list):
     fig, plot_obj = plt.subplots()
     fig.set_size_inches(9.92, 5.22)
@@ -48,13 +59,13 @@ def build_plot(wavelength_list, data_list):
     plot_obj.set_xlim(min(wavelength_list), max(wavelength_list))
     if min(data_list) > 0:
         plot_obj.set_ylim(bottom=0)
-    plot_obj.set_ylim(top=int(max(data_list)+1))
     plot_obj.set_xlabel('nm')
     plot_obj.set_ylabel('A', rotation='horizontal')
     plot_obj.yaxis.set_label_coords(0,1.02)
     plot_obj.grid(True, which='major')
     plot_obj.grid(True, which='minor', linestyle='--', alpha=0.7)
-    y_ticks = range(int(min(data_list)), int(max(data_list)+2))
+    y_ticks = generate_y_ticks(data_list)
+    plot_obj.set_ylim(top=y_ticks[-1])
     plt.yticks(y_ticks)
     plt.minorticks_on()
     plt.tight_layout()
