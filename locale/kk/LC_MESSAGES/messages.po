@@ -1,0 +1,82 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-27 18:42+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: uv-vis-dsp-viewer.py:41
+msgid "UV"
+msgstr "ультракүлгін"
+
+#: uv-vis-dsp-viewer.py:45
+msgid "visible"
+msgstr "көрінетін диапазон"
+
+#: uv-vis-dsp-viewer.py:140
+msgid "Enter molar concentration!"
+msgstr "Молярлық концентрацияны енгізіңіз!"
+
+#: uv-vis-dsp-viewer.py:154 uv-vis-dsp-viewer.py:186
+msgid "Help"
+msgstr "Ақпарат"
+
+#: uv-vis-dsp-viewer.py:166
+msgid "nm"
+msgstr "нм"
+
+#: uv-vis-dsp-viewer.py:176
+msgid "Open"
+msgstr "Ашу"
+
+#: uv-vis-dsp-viewer.py:181
+msgid "Save plot as"
+msgstr "Графикті қалайша сақтау"
+
+#: uv-vis-dsp-viewer.py:183
+msgid "About"
+msgstr "UV-vis DSP viewer жайлы"
+
+#: uv-vis-dsp-viewer.py:185
+msgid "File"
+msgstr "Файл"
+
+#: uv-vis-dsp-viewer.py:194
+msgid "Select a .dsp file\n"
+msgstr ".dsp файлын таңдаңыз\n"
+
+#: uv-vis-dsp-viewer.py:197
+msgid "Find peaks"
+msgstr "Шыңдарды табу"
+
+#: uv-vis-dsp-viewer.py:200
+msgid "Remove peak"
+msgstr "Шыңды өшіру"
+
+#: uv-vis-dsp-viewer.py:206
+msgid "Molar concentration:"
+msgstr "Молярлық концентрация:"
+
+#: uv-vis-dsp-viewer.py:220
+msgid "mol/L"
+msgstr "моль/л"
+
+#: uv-vis-dsp-viewer.py:223
+msgid "Calculate extinction"
+msgstr "Экстинкция есептеу"
+
+#: uv-vis-dsp-viewer.py:230
+msgid "Copy"
+msgstr "Көшіру"
