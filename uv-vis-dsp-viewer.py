@@ -6,6 +6,10 @@ from tkinter import filedialog, ttk
 
 #import sys
 
+uv_vis_border = 500 # nm
+uv_default_conc = [5, -5] # 5e-5 mol/L
+vis_default_conc = [1, -2] # 1e-2 mol/L
+
 def load_file():
     global sample_name, wavelength_list, data_list, peaks_list
     input_filename = filedialog.askopenfilename(filetypes=[('DSP files', '*.dsp')])
@@ -29,7 +33,15 @@ def parse_dsp_string(dsp_string):
     start_wavelength = int(dsp_lines[meta_inf_idx+1])
     end_wavelength = int(dsp_lines[meta_inf_idx+2])
     step = int(dsp_lines[meta_inf_idx+3])
-    meta_inf_str = f'{sample_name}:\nstart {start_wavelength}, end {end_wavelength}, step {step}'
+    if (start_wavelength + end_wavelength) / 2 < uv_vis_border:
+        spectrum_type = 'UV'
+        conc_signif_stringvar.set(uv_default_conc[0])
+        conc_exp_stringvar.set(uv_default_conc[1])
+    else:
+        spectrum_type = 'visible'
+        conc_signif_stringvar.set(vis_default_conc[0])
+        conc_exp_stringvar.set(vis_default_conc[1])
+    meta_inf_str = f'{sample_name}: {spectrum_type},\nstart {start_wavelength}, end {end_wavelength}, step {step}'
     meta_inf_msg.config(text=meta_inf_str)
     data_idx = dsp_lines.index('#DATA')
     data_list = dsp_lines[data_idx+1:]
@@ -96,6 +108,7 @@ def remove_peak():
 
 def refresh_peaks_listbox():
     peaks_listbox.delete(0, tk.END)
+    extinction_text_stringvar.set('')
     if peaks_list:
         for peak in peaks_list:
             peak_str = f'{peak[0]} nm: {peak[1]}'
@@ -107,22 +120,22 @@ def refresh_peaks_listbox():
         calculate_extinction_btn.config(state=tk.DISABLED)
 
 def calculate_extinction():
-    if concentration_signif.get() and concentration_exp.get():
-        conc_significand = float(concentration_signif.get())
-        conc_exponent = int(concentration_exp.get()) * -1
+    if conc_signif_stringvar.get() and conc_exp_stringvar.get():
+        conc_significand = float(conc_signif_stringvar.get())
+        conc_exponent = int(conc_exp_stringvar.get())
         peaks_substrings = []
         for peak in peaks_list:
-            extinction = peak[1] / conc_significand * 10 ** conc_exponent
+            extinction = peak[1] / conc_significand * 10 ** (conc_exponent * -1)
             substring = f'{peak[0]} ({extinction:.1f})'
             peaks_substrings.append(substring)
         peaks_string = 'λ max, nm (ε): ' + ', '.join(peaks_substrings)
     else:
         peaks_string = 'Enter molar concentration!'
-    extinction_text.set(peaks_string)
+    extinction_text_stringvar.set(peaks_string)
 
 def copy_extinction_text():
     root.clipboard_clear()
-    root.clipboard_append(extinction_text.get())
+    root.clipboard_append(extinction_text_stringvar.get())
 
 def show_help():
     help_window = tk.Toplevel()
@@ -171,14 +184,16 @@ peaks_listbox.grid(row=3, column=0, columnspan=5, sticky="ew", padx = 10)
 concentration_label_1 = tk.Label(text='Molar concentration:')
 concentration_label_1.grid(row=4, column=0)
 
-concentration_signif = ttk.Entry(width=4)
-concentration_signif.grid(row=4, column=1)
+conc_signif_stringvar = tk.StringVar()
+concentration_signif_entry = ttk.Entry(width=4, textvariable=conc_signif_stringvar)
+concentration_signif_entry.grid(row=4, column=1)
 
 concentration_label_2 = tk.Label(text='• 10^')
 concentration_label_2.grid(row=4, column=2)
 
-concentration_exp = ttk.Entry(width=3)
-concentration_exp.grid(row=4, column=3)
+conc_exp_stringvar = tk.StringVar()
+concentration_exp_entry = ttk.Entry(width=3, textvariable=conc_exp_stringvar)
+concentration_exp_entry.grid(row=4, column=3)
 
 concentration_label_3 = tk.Label(text='mol/L')
 concentration_label_3.grid(row=4, column=4, sticky="w", padx = 10)
@@ -186,8 +201,8 @@ concentration_label_3.grid(row=4, column=4, sticky="w", padx = 10)
 calculate_extinction_btn = tk.Button(root, text='Calculate extinction', command=calculate_extinction,  state=tk.DISABLED)
 calculate_extinction_btn.grid(row=5, column=0, sticky="w", padx = 10)
 
-extinction_text = tk.StringVar()
-extinction_text_output = ttk.Entry(textvariable=extinction_text)
+extinction_text_stringvar = tk.StringVar()
+extinction_text_output = ttk.Entry(textvariable=extinction_text_stringvar)
 extinction_text_output.grid(row=6, column=0, columnspan=4, sticky="ew", padx = 10)
 
 copy_btn = tk.Button(root, text='Copy', command=copy_extinction_text)
