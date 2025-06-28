@@ -136,12 +136,19 @@ def calculate_extinction():
         peaks_substrings = []
         for peak in peaks_list:
             extinction = peak[1] / conc_significand * 10 ** (conc_exponent * -1)
-            substring = f'{peak[0]} ({extinction:.1f})'
+            substring = f'{peak[0]} ({format_float_num(extinction)})'
             peaks_substrings.append(substring)
         peaks_string = f'λ max, {nm_label} (ε): ' + ', '.join(peaks_substrings)
     else:
         peaks_string = _('Enter molar concentration!')
     extinction_text_stringvar.set(peaks_string)
+
+def format_float_num(extinction):
+    if round(extinction) == round(extinction, 1):
+        extinction = round(extinction)
+    else:
+        extinction = round(extinction, 1)
+    return extinction
 
 def copy_extinction_text():
     root.clipboard_clear()
@@ -245,7 +252,6 @@ if os.path.exists('uvdv_config.json'):
     with open('uvdv_config.json', 'r') as settings_file:
         config = json.load(settings_file)
 else:
-    print('New config file')
     set_config('default', False)
 
 t = gettext.translation(domain='messages', localedir='locale', languages=[config['lang']], fallback=True)
