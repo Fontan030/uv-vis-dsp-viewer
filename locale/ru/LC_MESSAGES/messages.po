@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-27 18:42+0700\n"
+"POT-Creation-Date: 2025-06-29 00:58+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,66 +17,110 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: uv-vis-dsp-viewer.py:41
-msgid "UV"
-msgstr "УФ"
+#: uv-vis-dsp-viewer.py:47 uv-vis-dsp-viewer.py:194
+msgid "UV range"
+msgstr "УФ-область"
 
-#: uv-vis-dsp-viewer.py:45
-msgid "visible"
-msgstr "видимый"
+#: uv-vis-dsp-viewer.py:51 uv-vis-dsp-viewer.py:206
+msgid "Visible range"
+msgstr "Видимая область"
 
-#: uv-vis-dsp-viewer.py:140
+#: uv-vis-dsp-viewer.py:150
 msgid "Enter molar concentration!"
 msgstr "Введите молярную концентрацию!"
 
-#: uv-vis-dsp-viewer.py:154 uv-vis-dsp-viewer.py:186
-msgid "Help"
-msgstr "Справка"
+#: uv-vis-dsp-viewer.py:173
+msgid "Restart application to switch language"
+msgstr "Для смены языка требуется перезапуск программы"
 
-#: uv-vis-dsp-viewer.py:166
-msgid "nm"
-msgstr "нм"
-
-#: uv-vis-dsp-viewer.py:176
-msgid "Open"
-msgstr "Открыть"
-
-#: uv-vis-dsp-viewer.py:181
-msgid "Save plot as"
-msgstr "Сохранить график как"
-
-#: uv-vis-dsp-viewer.py:183
-msgid "About"
-msgstr "О программе"
+#: uv-vis-dsp-viewer.py:179 uv-vis-dsp-viewer.py:298
+msgid "Settings"
+msgstr "Настройки"
 
 #: uv-vis-dsp-viewer.py:185
-msgid "File"
-msgstr "Файл"
+msgid "UV-vis border"
+msgstr "Граница между УФ\nи видимой обл."
 
-#: uv-vis-dsp-viewer.py:194
-msgid "Select a .dsp file\n"
-msgstr "Выберите файл .dsp\n"
+#: uv-vis-dsp-viewer.py:192
+msgid "Default sample concentrations:"
+msgstr "Концентрации веществ по умолчанию:"
 
-#: uv-vis-dsp-viewer.py:197
-msgid "Find peaks"
-msgstr "Найти пики"
-
-#: uv-vis-dsp-viewer.py:200
-msgid "Remove peak"
-msgstr "Убрать пик"
-
-#: uv-vis-dsp-viewer.py:206
-msgid "Molar concentration:"
-msgstr "Молярная концентрация:"
-
-#: uv-vis-dsp-viewer.py:220
+#: uv-vis-dsp-viewer.py:204 uv-vis-dsp-viewer.py:216 uv-vis-dsp-viewer.py:340
 msgid "mol/L"
 msgstr "моль/л"
 
-#: uv-vis-dsp-viewer.py:223
-msgid "Calculate extinction"
-msgstr "Расчёт экстинкции"
+#: uv-vis-dsp-viewer.py:218
+msgid "Reset"
+msgstr "Сбросить"
 
-#: uv-vis-dsp-viewer.py:230
+#: uv-vis-dsp-viewer.py:244 uv-vis-dsp-viewer.py:301
+msgid "About"
+msgstr "О программе"
+
+#: uv-vis-dsp-viewer.py:250
+msgid "A viewer for DSP spectral data files recorded by VISIONlite Scan"
+msgstr "Программа для просмотра электронных спектров в формате DSP (VISIONlite Scan)"
+
+#: uv-vis-dsp-viewer.py:252
+msgid "Powered by matplotlib and tkinter"
+msgstr "Создано на основе matplotlib и tkinter"
+
+#: uv-vis-dsp-viewer.py:275
+msgid "nm"
+msgstr "нм"
+
+#: uv-vis-dsp-viewer.py:276
+msgid "step"
+msgstr "шаг"
+
+#: uv-vis-dsp-viewer.py:286
+msgid "Open"
+msgstr "Открыть"
+
+#: uv-vis-dsp-viewer.py:291
+msgid "Save plot as"
+msgstr "Сохранить график как"
+
+#: uv-vis-dsp-viewer.py:297
+msgid "Language"
+msgstr "Язык"
+
+#: uv-vis-dsp-viewer.py:304
+msgid "File"
+msgstr "Файл"
+
+#: uv-vis-dsp-viewer.py:305
+msgid "Edit"
+msgstr "Правка"
+
+#: uv-vis-dsp-viewer.py:306
+msgid "Help"
+msgstr "Помощь"
+
+#: uv-vis-dsp-viewer.py:314
+msgid "Select a .dsp file\n"
+msgstr "Выберите файл .dsp\n"
+
+#: uv-vis-dsp-viewer.py:317
+msgid "Find peaks"
+msgstr "Найти пики"
+
+#: uv-vis-dsp-viewer.py:320
+msgid "Remove peak"
+msgstr "Убрать пик"
+
+#: uv-vis-dsp-viewer.py:326
+msgid "Molar concentration:"
+msgstr "Молярная концентрация:"
+
+#: uv-vis-dsp-viewer.py:343
+msgid "Calculate extinction"
+msgstr "Вычислить экстинкцию"
+
+#: uv-vis-dsp-viewer.py:346
+msgid "Update plot"
+msgstr "Обновить график"
+
+#: uv-vis-dsp-viewer.py:353
 msgid "Copy"
 msgstr "Копировать"
