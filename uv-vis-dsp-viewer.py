@@ -24,8 +24,8 @@ def load_file():
     if input_filename:
         wavelength_list, data_list, peaks_list = [], [], []
         refresh_peaks_listbox()
-        plt.close()
-        file_menu.entryconfig(2, state=tk.NORMAL)
+        file_menu.entryconfig(1, state=tk.NORMAL)
+        update_plot_btn.config(state=tk.NORMAL)
         with open(input_filename, 'rb') as dsp_file:
             raw_dsp = dsp_file.read()
             file_encoding = chardet.detect(raw_dsp)['encoding']
@@ -33,7 +33,7 @@ def load_file():
             sample_name, wavelength_list, data_list = parse_dsp_string(dsp_string)
             find_peaks_btn.config(state=tk.NORMAL)
             #print(sys.modules.keys())
-            build_plot(wavelength_list, data_list)
+            build_plot(wavelength_list, data_list, [])
 
 def parse_dsp_string(dsp_string):
     dsp_lines = dsp_string.split('\n')
@@ -74,8 +74,9 @@ def generate_y_ticks(data_list):
         ticks_list.append(current_tick)
     return ticks_list
 
-def build_plot(wavelength_list, data_list):
+def build_plot(wavelength_list, data_list, peaks_list):
     global fig
+    plt.close() # close existing plot window if exists
     fig, plot_obj = plt.subplots()
     fig.set_size_inches(9.92, 5.22)
     plot_obj.plot(wavelength_list, data_list, '-', linewidth=1, color='black', label=sample_name)
@@ -95,6 +96,9 @@ def build_plot(wavelength_list, data_list):
     plt.legend(loc='best')
     man = plt.get_current_fig_manager()
     man.set_window_title(sample_name)
+    if peaks_list:
+        peaks_wl, peaks_absorption = zip(*peaks_list)
+        plot_obj.plot(peaks_wl, peaks_absorption, 'o', markersize=4, color='red')
     plt.show()
 
 def find_peaks():
@@ -335,6 +339,9 @@ concentration_label_3.grid(row=3, column=4, sticky='w')
 
 calculate_extinction_btn = tk.Button(root, text=_('Calculate extinction'), command=calculate_extinction,  state=tk.DISABLED)
 calculate_extinction_btn.grid(row=4, column=0, sticky='w', padx = 10)
+
+update_plot_btn = tk.Button(root, text=_('Update plot'), command=lambda: build_plot(wavelength_list, data_list, peaks_list), state=tk.DISABLED)
+update_plot_btn.grid(row=4, column=4, sticky='e', padx = 10)
 
 extinction_text_stringvar = tk.StringVar()
 extinction_text_output = ttk.Entry(textvariable=extinction_text_stringvar)
